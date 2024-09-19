@@ -35,9 +35,8 @@ public class Server {
             System.exit(0);
 
         } catch (IOException e) {
-            System.out.println("Exception caught when trying to listen on port "
-                + portNumber + " or listening for a connection");
-            System.out.println(e.getMessage());
+            System.err.println("I/O Exception caught on server interface thread or while trying to open socket on port " + portNumber);
+            System.err.println(e.getMessage());
         }
     }
 }

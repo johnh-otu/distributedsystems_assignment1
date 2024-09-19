@@ -32,14 +32,14 @@ public class ServerThread extends Thread{
                     clientSocket.close();
                 }
                 else {
-                    clientCounter.incrementAndGet();
                     out.println("Server connected!");
                     new ClientHandlerThread(clientSocket).start();
                 }
     
             }
         } catch (IOException e) {
-            System.err.println("Error while listening on port " + Port + ":\n" + e.getMessage());
+            System.err.println("I/O Exception in server thread while listening on port " + Port + ":\n" + e.getMessage());
+            System.err.println(e.getMessage());
             System.exit(1);
         }
 

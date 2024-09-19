@@ -15,7 +15,8 @@ public class ClientHandlerThread extends Thread {
     
     public void run() {
         
-        System.out.println(clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort());
+        System.out.println("c: " + clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort() 
+            + " [" + ServerThread.clientCounter.incrementAndGet() + "]");
 
         try {
             PrintWriter out =
@@ -24,14 +25,16 @@ public class ClientHandlerThread extends Thread {
                 new InputStreamReader(clientSocket.getInputStream()));
         
             String inputLine;
-            while ((inputLine = in.readLine()) != null) {
+            while (!(inputLine = in.readLine()).equals("quit")) {
                 out.println(inputLine);
             }
         } catch (Exception e) {
-            System.out.println("Exception caught when trying to listen on port "
-                + clientSocket.getPort() + " or listening for a connection");
-            System.out.println(e.getMessage());
+            System.err.println("Exception caught in client handler thread while trying to listen for "
+                + clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort());
+            System.err.println(e.getMessage());
         }
 
+        System.out.println("d: " + clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort() 
+            + " [" + ServerThread.clientCounter.decrementAndGet() + "]");
     }
 }

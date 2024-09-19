@@ -44,6 +44,7 @@ public class Client {
                 out.println(userInput);
                 System.out.println("Echo Server Sent: " + in.readLine());
             }
+            out.println(userInput); //send "quit" to server
             echoSocket.close();
 
         } catch (UnknownHostException e) {
