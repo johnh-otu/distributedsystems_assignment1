@@ -30,18 +30,17 @@ public class Client {
             BufferedReader in =
                 new BufferedReader(
                     new InputStreamReader(echoSocket.getInputStream()));
-            String serverResponse;
-
-            // if ((serverResponse = in.readLine()) != null) {
-            //     System.out.println("Server: " + serverResponse);
-            //     if (serverResponse == "Server is busy. Try again later.") {
-            //         echoSocket.close();
-            //         return;
-            //     }
-            // }
+            
+            String serverResponse = in.readLine();
+            System.out.println("Server: " + serverResponse);
+            
+            if (serverResponse.equals("Server is busy. Try again later.")) {
+                echoSocket.close();
+                return;
+            }
 
             String userInput;
-            while ((userInput = StandardInputUtil.readLine()) != null) {
+            while (!(userInput = StandardInputUtil.readLine()).equals("quit")) {
                 out.println(userInput);
                 System.out.println("Echo Server Sent: " + in.readLine());
             }

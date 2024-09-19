@@ -22,17 +22,18 @@ public class ServerThread extends Thread{
         try {
 
             while(true) {
+
                 Socket clientSocket = serverSocket.accept();
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
     
                 if (clientCounter.get() >= Server.MAX_CLIENTS) {
                     System.out.println("Server is busy, rejecting client: " + clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort());
-                    out.print("Server is busy. Try again later.");
+                    out.println("Server is busy. Try again later.");
                     clientSocket.close();
                 }
                 else {
                     clientCounter.incrementAndGet();
-                    out.print("Server connected!");
+                    out.println("Server connected!");
                     new ClientHandlerThread(clientSocket).start();
                 }
     
