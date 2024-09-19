@@ -3,19 +3,41 @@
  */
 package org.example.server;
 
-import org.example.list.LinkedList;
+import java.io.IOException;
 
-import static org.example.server.MessageUtils.getMessage;
-import static org.example.utilities.StringUtils.join;
-import static org.example.utilities.StringUtils.split;
-
-import org.apache.commons.text.WordUtils;
+import org.example.utilities.StandardInputUtil;
 
 public class Server {
+
+    public static final int MAX_CLIENTS = 2;
+
     public static void main(String[] args) {
-        LinkedList tokens;
-        tokens = split(getMessage());
-        String result = join(tokens);
-        System.out.println(WordUtils.capitalize(result));
+         
+        if (args.length != 1) {
+            System.err.println("Usage: java Server <port number>");
+            System.exit(1);
+        }
+         
+        int portNumber = Integer.parseInt(args[0]);
+        String inputline = "dummy";
+
+        try {
+            ServerThread thread = new ServerThread(portNumber);
+            thread.start();
+
+            System.out.println("Server thread started...\nType \"quit\" to stop the server.");;
+
+            while(!inputline.equals("quit")) {
+                inputline = StandardInputUtil.readLine();
+            }
+
+            System.out.println("Goodbye!");
+            System.exit(0);
+
+        } catch (IOException e) {
+            System.out.println("Exception caught when trying to listen on port "
+                + portNumber + " or listening for a connection");
+            System.out.println(e.getMessage());
+        }
     }
 }
