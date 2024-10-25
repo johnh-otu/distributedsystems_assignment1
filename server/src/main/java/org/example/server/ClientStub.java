@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.example.utilities.ClientMessage;
+import org.example.utilities.ServerMessage;
+
 public class ClientStub {
 
     private Socket clientSocket;

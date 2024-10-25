@@ -5,6 +5,9 @@ import java.net.Socket;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import org.example.utilities.ClientMessage;
+import org.example.utilities.ServerMessage;
+
 public class ClientHandlerThread extends Thread {
 
     private enum State {

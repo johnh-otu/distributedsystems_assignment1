@@ -1,4 +1,4 @@
-package org.example.server;
+package org.example.message;
 
 public class ServerMessage {
     public enum Type {
