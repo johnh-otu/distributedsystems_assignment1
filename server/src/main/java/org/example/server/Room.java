@@ -1,9 +1,5 @@
 package org.example.server;
 
-import java.net.Socket;
-
-import org.apache.commons.lang3.NotImplementedException;
-
 public class Room implements IHostRoom, IGuestRoom{
 
     private String id;
