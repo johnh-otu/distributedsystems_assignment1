@@ -1,14 +1,15 @@
 package org.example.server;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.example.utilities.ServerMessage;
+
 public class ServerThread extends Thread{
     
-    public static AtomicInteger clientCounter = new AtomicInteger(0);
+    public static AtomicInteger clientCounter = new AtomicInteger(20);
     public final int Port;
     private ServerSocket serverSocket;
     public RoomManager roomManager;
@@ -24,20 +25,13 @@ public class ServerThread extends Thread{
         try {
 
             while(true) {
-
                 Socket clientSocket = serverSocket.accept();
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-    
-                if (clientCounter.get() >= Server.MAX_CLIENTS) {
-                    System.out.println("Server is busy, rejecting client: " + clientSocket.getInetAddress().toString() + ":" + clientSocket.getPort());
-                    out.println("Server is busy. Try again later.");
-                    clientSocket.close();
-                }
-                else {
-                    out.println("Server connected!");
-                    new ClientHandlerThread(clientSocket, roomManager).start();
-                }
-    
+                ClientStub client = new ClientStub(clientSocket);
+                
+                clientCounter.incrementAndGet();
+                client.sendMessage(new ServerMessage(ServerMessage.Type.COMPLETED, "Connected successfully!"));
+                client.sendRooms(roomManager);
+                new ClientHandlerThread(client, roomManager).start();
             }
         } catch (IOException e) {
             System.err.println("I/O Exception in server thread while listening on port " + Port + ":\n" + e.getMessage());

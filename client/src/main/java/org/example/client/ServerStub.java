@@ -27,6 +27,9 @@ public class ServerStub {
     public int getPort() {
         return serverSocket.getPort();
     }
+    public void close() throws IOException {
+        serverSocket.close();
+    }
 
     public ServerMessage getMessage() throws IOException {
         while (true) {
@@ -68,6 +71,11 @@ public class ServerStub {
         str += "," + msg.getContent();
         out.print(str);
     }
+    public void sendMessage(String type, String content)
+    {
+        out.print(type.toUpperCase() + "," + content);
+    }
+
     private String getStringFromMessageType(ClientMessage.Type type) {
         switch (type) {
             case LIST_ROOMS:
@@ -83,7 +91,7 @@ public class ServerStub {
             case QUIT:
                 return "QUIT";
             default:
-                return "";
+                return "NULL";
         }
     }
 }

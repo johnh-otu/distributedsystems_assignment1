@@ -28,6 +28,9 @@ public class ClientStub {
     public int getPort() {
         return clientSocket.getPort();
     }
+    public void close() throws IOException {
+        clientSocket.close();
+    }
 
     public ClientMessage getMessage() throws IOException {
         while (true) {
@@ -87,5 +90,15 @@ public class ClientStub {
             default:
                 return "";
         }
+    }
+
+    public void sendRooms(RoomManager manager) {
+        var rooms = manager.getMap();
+        var msg = "";
+        for (String id: rooms.keySet()) {
+            msg += id + ",";
+        }
+        msg = msg.substring(0, msg.length() - 1);
+        this.sendMessage(new ServerMessage(ServerMessage.Type.ROOM_LIST, msg));
     }
 }

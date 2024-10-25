@@ -1,7 +1,6 @@
 package org.example.server;
 
 import java.io.IOException;
-import java.net.Socket;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -22,8 +21,8 @@ public class ClientHandlerThread extends Thread {
     private IHostRoom hostRoom;
     private State state = State.DEFAULT;
 
-    public ClientHandlerThread (Socket clientSocket, RoomManager roomManager) throws IOException {
-        this.client = new ClientStub(clientSocket);
+    public ClientHandlerThread (ClientStub client, RoomManager roomManager) throws IOException {
+        this.client = client;
         this.roomManager = roomManager;
     }
     
@@ -96,24 +95,30 @@ public class ClientHandlerThread extends Thread {
                         client.sendMessage(new ServerMessage(ServerMessage.Type.ERROR, "Not Implemented."));
                         throw new NotImplementedException();
                     case LIST_ROOMS:
-                        var rooms = roomManager.getMap();
-                        var msg = "";
-                        for (String id: rooms.keySet()) {
-                            msg += id + ",";
-                        }
-                        msg = msg.substring(0, msg.length() - 1);
-                        client.sendMessage(new ServerMessage(ServerMessage.Type.ROOM_LIST, msg));
+                        client.sendRooms(roomManager);
                     default:
                         break;
                 }
             }
+
+            //quit
+            client.close();
+
+            if (state == State.HOST) {
+                hostRoom.leaveAsHost();
+            }
+            else if (state == State.GUEST) {
+                guestRoom.leaveAsGuest();
+            }
+
+            System.out.println("d: " + client.getInetAddress().toString() + ":" + client.getPort() 
+            + " [" + ServerThread.clientCounter.decrementAndGet() + "]");
+
         } catch (Exception e) {
             System.err.println("Exception caught in client handler thread while trying to listen for "
                 + client.getInetAddress().toString() + ":" + client.getPort());
             System.err.println(e.getMessage());
         }
-
-        System.out.println("d: " + client.getInetAddress().toString() + ":" + client.getPort() 
-            + " [" + ServerThread.clientCounter.decrementAndGet() + "]");
     }
+
 }

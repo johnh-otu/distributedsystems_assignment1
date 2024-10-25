@@ -3,13 +3,12 @@
  */
 package org.example.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.example.utilities.ClientMessage;
+import org.example.utilities.ServerMessage;
 import org.example.utilities.StandardInputUtil;
 
 public class Client {
@@ -24,28 +23,22 @@ public class Client {
         int portNumber = Integer.parseInt(args[1]);
  
         try {
-            Socket echoSocket = new Socket(hostName, portNumber);
-            PrintWriter out =
-                new PrintWriter(echoSocket.getOutputStream(), true);
-            BufferedReader in =
-                new BufferedReader(
-                    new InputStreamReader(echoSocket.getInputStream()));
-            
-            String serverResponse = in.readLine();
-            System.out.println("Server: " + serverResponse);
-            
-            if (serverResponse.equals("Server is busy. Try again later.")) {
-                echoSocket.close();
-                return;
-            }
+            Socket serverSocket = new Socket(hostName, portNumber);
+            ServerStub server = new ServerStub(serverSocket);
+
+            ServerMessage msg = server.getMessage();
+            System.out.println("\u001B[32mServer: " + msg.getContent() + "\u001B[0m");
 
             String userInput;
+            String[] userInputArray;
             while (!(userInput = StandardInputUtil.readLine()).equals("quit")) {
-                out.println(userInput);
-                System.out.println("Echo Server Sent: " + in.readLine());
+                userInputArray = userInput.split(" ", 2);
+                server.sendMessage(userInputArray[0], userInputArray[1]);
             }
-            out.println(userInput); //send "quit" to server
-            echoSocket.close();
+
+            //send "quit" to server
+            server.sendMessage(new ClientMessage(ClientMessage.Type.QUIT, null));
+            server.close();
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
