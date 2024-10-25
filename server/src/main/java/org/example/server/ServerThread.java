@@ -11,10 +11,12 @@ public class ServerThread extends Thread{
     public static AtomicInteger clientCounter = new AtomicInteger(0);
     public final int Port;
     private ServerSocket serverSocket;
+    public RoomManager roomManager;
 
     public ServerThread(int port) throws IOException {
         this.Port = port;
         serverSocket = new ServerSocket(port);
+        roomManager = new RoomManager();
     }
 
     public void run() {
@@ -33,7 +35,7 @@ public class ServerThread extends Thread{
                 }
                 else {
                     out.println("Server connected!");
-                    new ClientHandlerThread(clientSocket).start();
+                    new ClientHandlerThread(clientSocket, roomManager).start();
                 }
     
             }
