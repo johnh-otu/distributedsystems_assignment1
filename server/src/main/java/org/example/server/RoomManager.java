@@ -6,7 +6,9 @@ public class RoomManager {
     
     private HashMap<String, Room> roomMap;
     
-    public RoomManager() {}
+    public RoomManager() {
+        roomMap = new HashMap<>();
+    }
 
     public synchronized boolean addRoom(Room room, String id) {
         if (roomMap.containsKey(id)) {
