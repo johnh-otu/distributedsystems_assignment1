@@ -17,6 +17,7 @@ public class Room implements IHostRoom, IGuestRoom{
     @Override
     public boolean init(String id) {
         this.id = id;
+        game = new TicTacToeGame();
         return manager.addRoom(this, id);
     }
 
@@ -46,10 +47,17 @@ public class Room implements IHostRoom, IGuestRoom{
         }
     }
 
-    @Override
-    public synchronized boolean playMove() {
+    public synchronized boolean playMove(TicTacToeGame.SquareState squareState, int square) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'playMove'");
+    }
+    @Override
+    public synchronized boolean playMoveX(int square) {
+        return playMove(TicTacToeGame.SquareState.X, square);
+    }
+    @Override
+    public synchronized boolean playMoveO(int square) {
+        return playMove(TicTacToeGame.SquareState.O, square);
     }
 
     @Override
@@ -65,5 +73,10 @@ public class Room implements IHostRoom, IGuestRoom{
 
     private void endRoom() {
         manager.delRoom(id);
+    }
+
+    @Override
+    public TicTacToeGame getGame() {
+        return game;
     }
 }

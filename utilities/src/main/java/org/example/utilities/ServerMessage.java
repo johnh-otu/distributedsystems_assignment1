@@ -6,7 +6,8 @@ public class ServerMessage {
         INVALID,
         ERROR,
         ROOM_LIST,
-        GAME_STATE
+        GAME_STATE,
+        SEND_HELP
     }
     
     private Type type;

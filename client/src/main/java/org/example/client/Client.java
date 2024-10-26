@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.example.utilities.ClientMessage;
-import org.example.utilities.ServerMessage;
 import org.example.utilities.StandardInputUtil;
 
 public class Client {
@@ -36,6 +35,9 @@ public class Client {
                 server.sendMessage(userInputArray[0], (userInputArray.length > 1 ? userInputArray[1] : null));
                 System.out.println("Sent: " + userInputArray[0] + "," + (userInputArray.length > 1 ? userInputArray[1] : "NULL")); //TODO: REMOVE DEBUG
             }
+
+            //stop listener
+            listener.stop();
 
             //send "quit" to server
             server.sendMessage(new ClientMessage(ClientMessage.Type.QUIT, null));

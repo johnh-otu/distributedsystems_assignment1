@@ -14,7 +14,7 @@ public class ListenerThread extends Thread {
 
         ServerMessage msg;
 
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
 
             try { 
                 msg = server.getMessage();
@@ -35,11 +35,14 @@ public class ListenerThread extends Thread {
                     case GAME_STATE:
                         printGameState(msg.getContent());
                         break;
+                    case SEND_HELP:
+                        printHelp(msg.getContent());
                     default:
                         break;
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.err.println("Exception occured while listening for server: " + e.getMessage());
             }
         }
@@ -50,6 +53,14 @@ public class ListenerThread extends Thread {
         System.out.println("=== ROOMS LIST ===");
         for (String room : inputArray) {
             System.out.println(room);
+        }
+    }
+
+    private void printHelp(String content) {
+        String[] inputArray = content.split(",");
+        System.out.println("=== COMMANDS ===");
+        for (String command : inputArray) {
+            System.out.println(command);
         }
     }
 

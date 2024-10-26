@@ -65,11 +65,13 @@ public class ClientHandlerThread extends Thread {
                                 guestRoom.leaveAsGuest();
                                 guestRoom = null;
                                 state = State.DEFAULT;
+                                client.sendMessage(new ServerMessage(ServerMessage.Type.COMPLETED, "Left the room."));
                                 break;
                             case HOST:
                                 hostRoom.leaveAsHost();
                                 hostRoom = null;
                                 state = State.DEFAULT;
+                                client.sendMessage(new ServerMessage(ServerMessage.Type.COMPLETED, "Left the room."));
                                 break;
                             default:   
                                 client.sendMessage(new ServerMessage(ServerMessage.Type.INVALID, "Not in a room."));
@@ -98,6 +100,22 @@ public class ClientHandlerThread extends Thread {
                         throw new NotImplementedException();
                     case LIST_ROOMS:
                         client.sendRooms(roomManager);
+                        break;
+                    case SHOW_GAME:
+                        throw new NotImplementedException();
+                        // switch (state) {
+                        //     case GUEST:
+                        //         //guestRoom.getGame().printState();
+                        //         break;
+                        //     case HOST:
+                        //         //guestRoom.getGame().printState();
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
+                        // break;
+                    case HELP:
+                        client.sendHelp();
                         break;
                     default:
                         break;

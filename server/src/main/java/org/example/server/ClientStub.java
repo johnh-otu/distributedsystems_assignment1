@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.example.utilities.ClientMessage;
 import org.example.utilities.ServerMessage;
 
@@ -64,6 +65,10 @@ public class ClientStub {
                 return ClientMessage.Type.PLAY_MOVE;
             case "QUIT":
                 return ClientMessage.Type.QUIT;
+            case "HELP":
+                return ClientMessage.Type.HELP;
+            case "SHOW_GAME":
+                return ClientMessage.Type.SHOW_GAME;
             default:
                 return null;
         }
@@ -87,6 +92,8 @@ public class ClientStub {
                 return "ROOM_LIST";
             case GAME_STATE:
                 return "GAME_STATE";
+            case SEND_HELP:
+                return "SEND_HELP";
             default:
                 return "";
         }
@@ -106,5 +113,16 @@ public class ClientStub {
         }
         this.sendMessage(new ServerMessage(ServerMessage.Type.ROOM_LIST, msg));
         System.out.println("Sent:" + msg);
+    }
+    public void sendGameState(TicTacToeGame game) {
+        throw new NotImplementedException();
+    }
+    public void sendHelp() {
+        String str = "";
+        for (String type : ClientMessage.getTypes()) {
+            str += type + ",";
+        }
+        str.substring(0, str.length() - 1);
+        this.sendMessage(new ServerMessage(ServerMessage.Type.SEND_HELP, str));
     }
 } 

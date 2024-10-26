@@ -2,10 +2,12 @@ package org.example.utilities;
 
 public class ClientMessage {
     public enum Type {
+        HELP,
         LIST_ROOMS,
         JOIN_ROOM,
         LEAVE_ROOM,
         MAKE_ROOM,
+        SHOW_GAME,
         PLAY_MOVE,
         QUIT
     }
@@ -23,5 +25,18 @@ public class ClientMessage {
     }
     public String getContent() {
         return message_content;
+    }
+
+    public static String[] getTypes() {
+        return new String[]{
+            "HELP",
+            "LIST_ROOMS",
+            "JOIN_ROOM",
+            "LEAVE_ROOM",
+            "MAKE_ROOM",
+            "SHOW_GAME",
+            "PLAY_MOVE",
+            "QUIT"
+        };
     }
 }

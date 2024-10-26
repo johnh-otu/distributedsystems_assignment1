@@ -60,6 +60,8 @@ public class ServerStub {
                 return ServerMessage.Type.ROOM_LIST;
             case "GAME_STATE":
                 return ServerMessage.Type.GAME_STATE;
+            case "SEND_HELP":
+                return ServerMessage.Type.SEND_HELP;
             default:
                 return null;
         }
@@ -90,6 +92,10 @@ public class ServerStub {
                 return "PLAY_MOVE";
             case QUIT:
                 return "QUIT";
+            case HELP:
+                return "HELP";
+            case SHOW_GAME:
+                return "SHOW_GAME";
             default:
                 return "NULL";
         }
