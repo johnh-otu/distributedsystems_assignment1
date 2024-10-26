@@ -65,7 +65,14 @@ public class ListenerThread extends Thread {
     }
 
     private void printGameState(String content) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'printGameState'");
+        String[] states = content.split(",");
+        for (int i = 0; i < 9; i++) {
+            if (i % 3 == 0) {
+                System.out.println();
+            }
+            System.out.print(states[i].equals("NULL") ? i + 1 : states[i]);
+            System.out.print(" ");
+        }
+        System.out.println("\n");
     }
 }

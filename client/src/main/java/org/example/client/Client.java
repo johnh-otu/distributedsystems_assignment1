@@ -33,7 +33,6 @@ public class Client {
             while (!(userInput = StandardInputUtil.readLine()).toLowerCase().equals("quit")) {
                 userInputArray = userInput.split(" ", 2);
                 server.sendMessage(userInputArray[0], (userInputArray.length > 1 ? userInputArray[1] : null));
-                System.out.println("Sent: " + userInputArray[0] + "," + (userInputArray.length > 1 ? userInputArray[1] : "NULL")); //TODO: REMOVE DEBUG
             }
 
             //stop listener
@@ -41,7 +40,6 @@ public class Client {
 
             //send "quit" to server
             server.sendMessage(new ClientMessage(ClientMessage.Type.QUIT, null));
-            System.out.println("Sent: QUIT"); //TODO: REMOVE DEBUG
             server.close();
 
         } catch (UnknownHostException e) {

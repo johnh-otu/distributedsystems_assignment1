@@ -36,7 +36,6 @@ public class ClientHandlerThread extends Thread {
             
             while ((inputMessage = client.getMessage()).getType() != ClientMessage.Type.QUIT) {
                 // handle input
-                System.out.println("Received: " + inputMessage.getContent()); //TODO: REMOVE DEBUG
                 switch (inputMessage.getType()) {
                     case JOIN_ROOM:
                         if (state != State.DEFAULT) {
@@ -96,24 +95,40 @@ public class ClientHandlerThread extends Thread {
                         }
                         break;
                     case PLAY_MOVE:
-                        client.sendMessage(new ServerMessage(ServerMessage.Type.ERROR, "Not Implemented."));
-                        throw new NotImplementedException();
+                        int square = 0;
+                        try {
+                            square = Integer.parseInt(inputMessage.getContent());
+                        } catch (Exception e) {
+                            client.sendMessage(new ServerMessage(ServerMessage.Type.INVALID, "Invalid square \"" + inputMessage.getContent() + "\"."));
+                        }
+                        switch (state) {
+                            case HOST:
+                                hostRoom.playMoveO(square - 1);
+                                break;
+                            case GUEST:
+                                guestRoom.playMoveX(square - 1);
+                                break;
+                            default:
+                                client.sendMessage(new ServerMessage(ServerMessage.Type.INVALID, "You're not in a room yet."));
+                                break;
+                        }
+                        break;
                     case LIST_ROOMS:
                         client.sendRooms(roomManager);
                         break;
                     case SHOW_GAME:
-                        throw new NotImplementedException();
-                        // switch (state) {
-                        //     case GUEST:
-                        //         //guestRoom.getGame().printState();
-                        //         break;
-                        //     case HOST:
-                        //         //guestRoom.getGame().printState();
-                        //         break;
-                        //     default:
-                        //         break;
-                        // }
-                        // break;
+                        switch (state) {
+                            case GUEST:
+                                client.sendGameState(guestRoom.getGame());
+                                break;
+                            case HOST:
+                                client.sendGameState(hostRoom.getGame());
+                                break;
+                            default:
+                                client.sendMessage(new ServerMessage(ServerMessage.Type.INVALID, "You're not in a room yet."));
+                                break;
+                        }
+                        break;
                     case HELP:
                         client.sendHelp();
                         break;
@@ -122,7 +137,6 @@ public class ClientHandlerThread extends Thread {
                 }
             }
 
-            System.out.println("Received: QUIT"); //TODO: REMOVE DEBUG
             //quit
             client.close();
 
