@@ -115,7 +115,7 @@ public class ClientStub {
         System.out.println("Sent:" + msg);
     }
     public void sendGameState(TicTacToeGame game) {
-        throw new NotImplementedException();
+        this.sendMessage(new ServerMessage(ServerMessage.Type.GAME_STATE, game.printState()));
     }
     public void sendHelp() {
         String str = "";
