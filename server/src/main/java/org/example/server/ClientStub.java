@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.example.utilities.ClientMessage;
 import org.example.utilities.ServerMessage;
 
@@ -112,7 +111,6 @@ public class ClientStub {
             msg = msg.substring(0, msg.length() - 1);
         }
         this.sendMessage(new ServerMessage(ServerMessage.Type.ROOM_LIST, msg));
-        System.out.println("Sent:" + msg);
     }
     public void sendGameState(TicTacToeGame game) {
         this.sendMessage(new ServerMessage(ServerMessage.Type.GAME_STATE, game.printState()));
