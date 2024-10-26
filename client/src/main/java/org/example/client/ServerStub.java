@@ -69,11 +69,11 @@ public class ServerStub {
     {
         String str = getStringFromMessageType(msg.getType());
         str += "," + msg.getContent();
-        out.print(str);
+        out.println(str);
     }
     public void sendMessage(String type, String content)
     {
-        out.print(type.toUpperCase() + "," + content);
+        out.println(type.toUpperCase() + "," + content);
     }
 
     private String getStringFromMessageType(ClientMessage.Type type) {

@@ -9,7 +9,7 @@ import org.example.utilities.ServerMessage;
 
 public class ServerThread extends Thread{
     
-    public static AtomicInteger clientCounter = new AtomicInteger(20);
+    public static AtomicInteger clientCounter = new AtomicInteger(0);
     public final int Port;
     private ServerSocket serverSocket;
     public RoomManager roomManager;
@@ -28,7 +28,6 @@ public class ServerThread extends Thread{
                 Socket clientSocket = serverSocket.accept();
                 ClientStub client = new ClientStub(clientSocket);
                 
-                clientCounter.incrementAndGet();
                 client.sendMessage(new ServerMessage(ServerMessage.Type.COMPLETED, "Connected successfully!"));
                 client.sendRooms(roomManager);
                 new ClientHandlerThread(client, roomManager).start();

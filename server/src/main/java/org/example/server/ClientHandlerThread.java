@@ -36,6 +36,7 @@ public class ClientHandlerThread extends Thread {
             
             while ((inputMessage = client.getMessage()).getType() != ClientMessage.Type.QUIT) {
                 // handle input
+                System.out.println("Received: " + inputMessage.getContent()); //TODO: REMOVE DEBUG
                 switch (inputMessage.getType()) {
                     case JOIN_ROOM:
                         if (state != State.DEFAULT) {
@@ -91,16 +92,19 @@ public class ClientHandlerThread extends Thread {
                             hostRoom = null;
                             client.sendMessage(new ServerMessage(ServerMessage.Type.ERROR, "Room \"" + inputMessage.getContent() + "\" already exists."));
                         }
+                        break;
                     case PLAY_MOVE:
                         client.sendMessage(new ServerMessage(ServerMessage.Type.ERROR, "Not Implemented."));
                         throw new NotImplementedException();
                     case LIST_ROOMS:
                         client.sendRooms(roomManager);
+                        break;
                     default:
                         break;
                 }
             }
 
+            System.out.println("Received: QUIT"); //TODO: REMOVE DEBUG
             //quit
             client.close();
 

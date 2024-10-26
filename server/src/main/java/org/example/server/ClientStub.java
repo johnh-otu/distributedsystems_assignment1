@@ -73,7 +73,7 @@ public class ClientStub {
     {
         String str = getStringFromMessageType(msg.getType());
         str += "," + msg.getContent();
-        out.print(str);
+        out.println(str);
     }
     private String getStringFromMessageType(ServerMessage.Type type) {
         switch (type) {
@@ -98,7 +98,13 @@ public class ClientStub {
         for (String id: rooms.keySet()) {
             msg += id + ",";
         }
-        msg = msg.substring(0, msg.length() - 1);
+        if (rooms.size() < 1) {
+            msg = "No rooms yet. Try creating a room.";
+        }
+        else {
+            msg = msg.substring(0, msg.length() - 1);
+        }
         this.sendMessage(new ServerMessage(ServerMessage.Type.ROOM_LIST, msg));
+        System.out.println("Sent:" + msg);
     }
-}
+} 

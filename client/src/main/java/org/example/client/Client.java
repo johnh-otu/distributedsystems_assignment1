@@ -26,18 +26,20 @@ public class Client {
             Socket serverSocket = new Socket(hostName, portNumber);
             ServerStub server = new ServerStub(serverSocket);
 
-            ServerMessage msg = server.getMessage();
-            System.out.println("\u001B[32mServer: " + msg.getContent() + "\u001B[0m");
+            ListenerThread listener = new ListenerThread(server);
+            listener.start();
 
             String userInput;
             String[] userInputArray;
-            while (!(userInput = StandardInputUtil.readLine()).equals("quit")) {
+            while (!(userInput = StandardInputUtil.readLine()).toLowerCase().equals("quit")) {
                 userInputArray = userInput.split(" ", 2);
-                server.sendMessage(userInputArray[0], userInputArray[1]);
+                server.sendMessage(userInputArray[0], (userInputArray.length > 1 ? userInputArray[1] : null));
+                System.out.println("Sent: " + userInputArray[0] + "," + (userInputArray.length > 1 ? userInputArray[1] : "NULL")); //TODO: REMOVE DEBUG
             }
 
             //send "quit" to server
             server.sendMessage(new ClientMessage(ClientMessage.Type.QUIT, null));
+            System.out.println("Sent: QUIT"); //TODO: REMOVE DEBUG
             server.close();
 
         } catch (UnknownHostException e) {
