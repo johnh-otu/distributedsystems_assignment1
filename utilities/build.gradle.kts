@@ -6,6 +6,7 @@ plugins {
     id("buildlogic.java-library-conventions")
 }
 
-dependencies {
+/*dependencies {
     api(project(":list"))
 }
+*/

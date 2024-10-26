@@ -3,13 +3,11 @@
  */
 package org.example.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.example.utilities.ClientMessage;
 import org.example.utilities.StandardInputUtil;
 
 public class Client {
@@ -24,28 +22,27 @@ public class Client {
         int portNumber = Integer.parseInt(args[1]);
  
         try {
-            Socket echoSocket = new Socket(hostName, portNumber);
-            PrintWriter out =
-                new PrintWriter(echoSocket.getOutputStream(), true);
-            BufferedReader in =
-                new BufferedReader(
-                    new InputStreamReader(echoSocket.getInputStream()));
-            
-            String serverResponse = in.readLine();
-            System.out.println("Server: " + serverResponse);
-            
-            if (serverResponse.equals("Server is busy. Try again later.")) {
-                echoSocket.close();
-                return;
-            }
+            Socket serverSocket = new Socket(hostName, portNumber);
+            ServerStub server = new ServerStub(serverSocket);
+
+            ListenerThread listener = new ListenerThread(server);
+            listener.start();
 
             String userInput;
-            while (!(userInput = StandardInputUtil.readLine()).equals("quit")) {
-                out.println(userInput);
-                System.out.println("Echo Server Sent: " + in.readLine());
+            String[] userInputArray;
+            while (!(userInput = StandardInputUtil.readLine()).toLowerCase().equals("quit")) {
+                userInputArray = userInput.split(" ", 2);
+                server.sendMessage(userInputArray[0], (userInputArray.length > 1 ? userInputArray[1] : null));
+                System.out.println("Sent: " + userInputArray[0] + "," + (userInputArray.length > 1 ? userInputArray[1] : "NULL")); //TODO: REMOVE DEBUG
             }
-            out.println(userInput); //send "quit" to server
-            echoSocket.close();
+
+            //stop listener
+            listener.stop();
+
+            //send "quit" to server
+            server.sendMessage(new ClientMessage(ClientMessage.Type.QUIT, null));
+            System.out.println("Sent: QUIT"); //TODO: REMOVE DEBUG
+            server.close();
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);

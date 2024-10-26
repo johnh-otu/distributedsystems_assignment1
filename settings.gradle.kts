@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "TicTacToeNet"
-include("client", "server", "list", "utilities")
+include("client", "server", "message", "utilities")
